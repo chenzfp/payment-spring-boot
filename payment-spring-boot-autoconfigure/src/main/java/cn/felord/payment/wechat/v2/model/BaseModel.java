@@ -19,6 +19,7 @@ package cn.felord.payment.wechat.v2.model;
 
 
 import cn.felord.payment.PayException;
+import cn.felord.payment.wechat.v3.HttpHostUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -237,6 +238,7 @@ public abstract class BaseModel {
                 null, hostnameVerifier);
 
         CloseableHttpClient httpclient = HttpClients.custom()
+                .setProxy(HttpHostUtil.getInstance().getProxy())
                 .setSSLSocketFactory(sslsf)
                 .build();
         HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(httpclient);

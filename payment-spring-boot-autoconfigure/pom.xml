@@ -22,11 +22,11 @@
     <parent>
         <groupId>cn.felord</groupId>
         <artifactId>payment-spring-boot</artifactId>
-        <version>1.0.20.RELEASE</version>
+        <version>1.0.20.fix.SNAPSHOT</version>
     </parent>
 
     <artifactId>payment-spring-boot-autoconfigure</artifactId>
-    <version>1.0.20.RELEASE</version>
+    <version>1.0.20.fix.SNAPSHOT</version>
     <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
 
@@ -82,6 +82,10 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
         </dependency>
     </dependencies>
     <build>

@@ -22,6 +22,8 @@ import cn.felord.payment.wechat.WechatPayResponseErrorHandler;
 import cn.felord.payment.wechat.enumeration.WechatPayV3Type;
 import cn.felord.payment.wechat.v3.model.ResponseSignVerifyParams;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -349,7 +351,8 @@ public class WechatPayClient {
      */
     private void applyDefaultRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        CloseableHttpClient httpClient = HttpClients.custom().setProxy(HttpHostUtil.getInstance().getProxy()).build();
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
         DefaultResponseErrorHandler errorHandler = new WechatPayResponseErrorHandler();
         restTemplate.setErrorHandler(errorHandler);
         List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
