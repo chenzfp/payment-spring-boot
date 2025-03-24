@@ -43,7 +43,15 @@ public class HttpHostUtil {
         return Objects.nonNull(httpProxy) ? HttpHost.create((String) httpProxy) : null;
     }
 
+    /**
+     * 优先获取JVM中的参数，如果存在则直接返回，不存在则从application.yml中获取
+     * @return String
+     */
     private String getActive() {
+        String active = System.getProperty("spring.profiles.active");
+        if (active != null) {
+            return active;
+        }
         loadConfig("application.yml");
         return getConfigValue("spring.profiles.active", String.class);
     }
