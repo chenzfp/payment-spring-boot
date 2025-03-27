@@ -1,5 +1,6 @@
 package cn.felord.payment.wechat.v3;
 
+import lombok.Setter;
 import org.apache.http.HttpHost;
 import org.yaml.snakeyaml.Yaml;
 
@@ -10,6 +11,8 @@ import java.util.Objects;
 
 public class HttpHostUtil {
 
+    @Setter
+    private static volatile String profilesActive;
     // 1. 定义一个私有静态的实例变量
     private static volatile HttpHostUtil instance;
 
@@ -34,11 +37,16 @@ public class HttpHostUtil {
         Object httpProxy = CONFIG_MAP.get(key);
         // 配置文件仅读取一次
         if (CONFIG_MAP.isEmpty()) {
-            String active = getActive();
+            String active = profilesActive;
+            if (active == null) {
+                active = getActive();
+            }
             String applicationYmlName = "application-" + active + ".yml";
             loadConfig(applicationYmlName);
             httpProxy = getConfigValue(key, String.class);
-            CONFIG_MAP.put(key, httpProxy);
+            if (Objects.nonNull(httpProxy)) {
+                CONFIG_MAP.put(key, httpProxy);
+            }
         }
         return Objects.nonNull(httpProxy) ? HttpHost.create((String) httpProxy) : null;
     }
@@ -48,10 +56,12 @@ public class HttpHostUtil {
      * @return String
      */
     private String getActive() {
+        // -Dspring.profiles.active 获取
         String active = System.getProperty("spring.profiles.active");
         if (active != null) {
             return active;
         }
+        // 从application.yml 获取
         loadConfig("application.yml");
         return getConfigValue("spring.profiles.active", String.class);
     }

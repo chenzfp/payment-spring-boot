@@ -17,13 +17,13 @@
 package cn.felord.payment.wechat;
 
 
-import cn.felord.payment.wechat.v3.SignatureProvider;
-import cn.felord.payment.wechat.v3.WechatApiProvider;
-import cn.felord.payment.wechat.v3.WechatMetaContainer;
-import cn.felord.payment.wechat.v3.WechatPayClient;
+import cn.felord.payment.wechat.v3.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.env.Environment;
 
 /**
  * The type Wechat pay configuration.
@@ -31,8 +31,14 @@ import org.springframework.context.annotation.Configuration;
  * @author felord.cn
  * @since 1.0.0.RELEASE
  */
+@DependsOn("environment")
 @Configuration(proxyBeanMethods = false)
 public class WechatPayConfiguration {
+
+    @Autowired
+    public WechatPayConfiguration(Environment environment) {
+        HttpHostUtil.setProfilesActive(environment.getProperty("spring.profiles.active"));
+    }
 
     /**
      * 微信支付公私钥 以及序列号等元数据.
