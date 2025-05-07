@@ -1,10 +1,12 @@
 package cn.felord.payment.wechat.v3;
 
 import lombok.Setter;
-import org.apache.http.HttpHost;
+import lombok.SneakyThrows;
+import org.apache.hc.core5.http.HttpHost;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -32,6 +34,7 @@ public class HttpHostUtil {
         return instance;
     }
 
+    @SneakyThrows
     public HttpHost getProxy() {
         String key = "wechat.httpProxy";
         Object httpProxy = CONFIG_MAP.get(key);

@@ -22,8 +22,8 @@ import cn.felord.payment.wechat.WechatPayResponseErrorHandler;
 import cn.felord.payment.wechat.enumeration.WechatPayV3Type;
 import cn.felord.payment.wechat.v3.model.ResponseSignVerifyParams;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -254,7 +254,7 @@ public class WechatPayClient {
             ResponseEntity<ObjectNode> responseEntity = restOperations.exchange(requestEntity, ObjectNode.class);
             HttpHeaders headers = responseEntity.getHeaders();
             ObjectNode body = responseEntity.getBody();
-            HttpStatus statusCode = responseEntity.getStatusCode();
+            HttpStatusCode statusCode = responseEntity.getStatusCode();
             // 微信请求id
             String requestId = headers.getFirst("Request-ID");
             if (!statusCode.is2xxSuccessful()) {
@@ -300,7 +300,7 @@ public class WechatPayClient {
 
             ResponseEntity<String> responseEntity = restOperations.exchange(requestEntity, String.class);
 
-            HttpStatus statusCode = responseEntity.getStatusCode();
+            HttpStatusCode statusCode = responseEntity.getStatusCode();
             // 微信请求id
             String requestId = requestEntity.getHeaders().getFirst("Request-ID");
             if (!statusCode.is2xxSuccessful()) {
@@ -324,7 +324,7 @@ public class WechatPayClient {
 
             ResponseEntity<Resource> responseEntity = restOperations.exchange(requestEntity, Resource.class);
 
-            HttpStatus statusCode = responseEntity.getStatusCode();
+            HttpStatusCode statusCode = responseEntity.getStatusCode();
             // 微信请求id
             String requestId = requestEntity.getHeaders().getFirst("Request-ID");
             if (!statusCode.is2xxSuccessful()) {
@@ -351,7 +351,7 @@ public class WechatPayClient {
      */
     private void applyDefaultRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
-        CloseableHttpClient httpClient = HttpClients.custom().setProxy(HttpHostUtil.getInstance().getProxy()).build();
+        HttpClient httpClient = HttpClients.custom().setProxy(HttpHostUtil.getInstance().getProxy()).build();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
         DefaultResponseErrorHandler errorHandler = new WechatPayResponseErrorHandler();
         restTemplate.setErrorHandler(errorHandler);
